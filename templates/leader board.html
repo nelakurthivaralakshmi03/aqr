@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/lead.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Leaderboard</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Username</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, user in leaderboard %}
+                <tr>
+                    <td class="rank">#{{ index + 1 }}</td>
+                    <td>{{ user.email }}</td>
+                    <td class="score 
+                        {% if user.score >= 80 %}
+                            high
+                        {% elif user.score >= 40 %}
+                            medium
+                        {% else %}
+                            low
+                        {% endif %}
+                    ">{{ user.score }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

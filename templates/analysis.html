@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Performance Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/analy.css') }}">
+</head>
+<body>
+
+<div class="dashboard">
+    <!-- Profile Section -->
+    <div class="profile-card">
+        <img src="{{ session['user_picture'] if session.get('user_picture') else '/static/css/images.jpeg' }}" alt="User Picture">
+        <h2>{{ stats['username'] }}</h2>
+        <h4>{{ session['user_email'] }}</h4>
+        <div class="score-box">Score: {{ stats['score'] }}</div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-area">
+        <div class="chart-container">
+            <canvas id="barChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="doughnutChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    const userScore = {{ stats['score'] }};
+    const maxScore = {{ stats['max_score'] }};
+
+
+    // Bar Chart
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Your Score', 'Max Score'],
+            datasets: [{
+                label: 'Scores',
+                data: [userScore, maxScore],
+                backgroundColor: ['#03A9F4', '#9E9E9E']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: maxScore
+                }
+            }
+        }
+    });
+
+    // Doughnut Chart
+    new Chart(document.getElementById('doughnutChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Scored', 'Remaining'],
+            datasets: [{
+                data: [userScore, maxScore - userScore],
+                backgroundColor: ['#4CAF50', '#616161']
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: '70%',
+            plugins: {
+                legend: { display: true },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.label}: ${context.raw}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+
+</body>
+</html>

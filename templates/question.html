@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game Question</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/quiz1.css') }}">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Question Table -->
+        <form method="POST">
+            <table class="question-table">
+                <tr>
+                    <th colspan="2">{{ question_data['title'] }}</th>
+                </tr>
+                {% for option in question_data['options'] %}
+                <tr>
+                    <td class="option">
+                        <label class="option-button">
+                            <input type="radio" name="answer" value="{{ option }}" required>
+                            <span>{{ option }}</span>
+                        </label>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <!-- ✅ Submit Button -->
+            <div class="control-buttons">
+                <button type="submit" class="lock-btn">Submit Answer</button>
+            </div>
+        </form>
+
+        {% if selected %}
+        <!-- ✅ Explanation Section -->
+        <div class="explanation-container">
+            <table class="explanation-table">
+                <tr>
+                    <th>Explanation</th>
+                </tr>
+                <tr>
+                    <td>
+                        {% if correct %}
+                            <p class="correct">Correct! ✅</p>
+                        {% else %}
+                            <p class="incorrect">Incorrect ❌</p>
+                        {% endif %}
+                        <p><strong>{{ question_data['explanation'] }}</strong></p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

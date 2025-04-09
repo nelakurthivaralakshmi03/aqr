@@ -1,0 +1,83 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image: url("participate.jpg");
+    color:white;
+
+}
+
+table {
+    width: 80%;
+    margin: 40px auto;
+    border-collapse: separate;
+    border-spacing: 0 10px;  
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.7);
+}
+th, td {
+    padding: 20px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+    color:white;
+    text-decoration: none;
+}
+th {
+    background-color: #222;
+    color:white;
+}
+tr:hover {
+    background-color: #333;
+}
+
+.easy {
+    color: #4CAF50;
+}
+
+.medium {
+    color: #FF9800;
+}
+
+.hard {
+    color: #F44336;
+}
+
+.lock-icon {
+    color: gold;
+    margin-left: 8px;
+}
+
+tr:hover {
+    background-color: #3e4147;
+
+}
+
+input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.control-buttons {
+    margin: 20px;
+    padding: 45px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styling the Submit Button */
+.lock-btn {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 18px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.lock-btn:hover {
+    background-color: #45a049;
+}
+

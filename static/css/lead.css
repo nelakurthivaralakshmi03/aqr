@@ -1,0 +1,67 @@
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: url('participate.jpg') repeat;
+    background-size: cover;
+    color: white;
+}
+
+.container {
+    max-width: 900px;
+    margin: 80px auto;
+
+    padding: 30px 40px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+h2 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 30px;
+    color: #f0f0f0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 18px;
+}
+
+th, td {
+    padding: 18px;
+    text-align: center;
+    border-bottom: 1px solid #444;
+}
+
+th {
+    background-color: #1f1f1f;
+    color: #ffffff;
+    font-size: 20px;
+}
+
+tr:hover {
+    background-color: #2a2a2a;
+}
+
+.rank {
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.score {
+    font-weight: bold;
+}
+
+.score.high {
+    color: #27ae60; /* Green */
+}
+
+.score.medium {
+    color: #f39c12; /* Orange */
+}
+
+.score.low {
+    color: #e74c3c; /* Red */
+}
