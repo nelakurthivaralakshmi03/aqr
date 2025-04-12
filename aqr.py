@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # MongoDB setup
 try:
-    client = MongoClient('mongodb+srv://vara:vara2023.@cluster-1.zdli1jk.mongodb.net/test?retryWrites=true&w=majority', serverSelectionTimeoutMS=5000)
+    client = MongoClient('mongodb://localhost:27017/', serverSelectionTimeoutMS=5000)
     client.server_info()
     db = client['aptitude_db']
     collection = db['questions']
@@ -120,8 +120,23 @@ def update_status(slug):
 
 @app.route('/leaderboard')
 def leaderboard():
-    users = result_collection.find().sort('score', -1)
-    leaderboard_data = [(i, user) for i, user in enumerate(users)]
+    users = list(result_collection.find({}, {'_id': 0, 'email': 1, 'score': 1}))
+    
+    # Sort users by score descending
+    users.sort(key=lambda x: x['score'], reverse=True)
+    
+    leaderboard_data = []
+    prev_score = None
+    rank = 0
+    actual_position = 0
+
+    for user in users:
+        actual_position += 1
+        if user['score'] != prev_score:
+            rank = actual_position
+            prev_score = user['score']
+        leaderboard_data.append({'rank': rank, 'email': user['email'], 'score': user['score']})
+
     return render_template('leader board.html', leaderboard=leaderboard_data)
 
 # Manual Signup
