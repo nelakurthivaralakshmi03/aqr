@@ -119,25 +119,29 @@ def update_status(slug):
     return jsonify({"status": "success"})
 
 @app.route('/leaderboard')
+@app.route('/leaderboard')
 def leaderboard():
     users = list(result_collection.find({}, {'_id': 0, 'email': 1, 'score': 1}))
     
     # Sort users by score descending
     users.sort(key=lambda x: x['score'], reverse=True)
-    
+
     leaderboard_data = []
     prev_score = None
     rank = 0
-    actual_position = 0
 
     for user in users:
-        actual_position += 1
         if user['score'] != prev_score:
-            rank = actual_position
+            rank += 1
             prev_score = user['score']
-        leaderboard_data.append({'rank': rank, 'email': user['email'], 'score': user['score']})
+        leaderboard_data.append({
+            'rank': rank,
+            'email': user['email'],
+            'score': user['score']
+        })
 
     return render_template('leader board.html', leaderboard=leaderboard_data)
+
 
 # Manual Signup
 @app.route('/signup', methods=['POST'])
