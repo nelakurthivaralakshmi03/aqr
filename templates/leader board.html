@@ -17,9 +17,9 @@
                 </tr>
             </thead>
             <tbody>
-                {% for index, user in leaderboard %}
+                {% for user in leaderboard %}
                 <tr>
-                    <td class="rank">#{{ index + 1 }}</td>
+                    <td class="rank">#{{ user.rank }}</td>
                     <td>{{ user.email }}</td>
                     <td class="score 
                         {% if user.score >= 80 %}
