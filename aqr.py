@@ -90,7 +90,6 @@ def question(concept):
     # Find all slugs to calculate previous/next
     all_slugs = list(collection.find({}, {'slug': 1, '_id': 0}))
     slug_list = [q['slug'] for q in all_slugs if 'slug' in q]
-
     try:
         index = slug_list.index(concept)
     except ValueError:
@@ -199,3 +198,9 @@ def manual_login():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
+  
+  
