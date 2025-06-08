@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # MongoDB setup
 try:
-    client = MongoClient('mongodb+srv://vara:vara2023.@cluster-1.zdli1jk.mongodb.net/test?retryWrites=true&w=majority', serverSelectionTimeoutMS=5000)
+    client = MongoClient('mongodb://localhost:27017/', serverSelectionTimeoutMS=5000)
     client.server_info()
     db = client['aptitude_db']
     collection = db['questions']
@@ -88,8 +88,10 @@ def question(concept):
         return "Question not found", 404
 
     # Find all slugs to calculate previous/next
-    all_slugs = list(collection.find({}, {'slug': 1, '_id': 0}))
+    # Only get documents where 'slug' field exists
+    all_slugs = list(collection.find({'slug': {'$exists': True}}, {'slug': 1, '_id': 0}))
     slug_list = [q['slug'] for q in all_slugs]
+
     try:
         index = slug_list.index(concept)
     except ValueError:
@@ -198,9 +200,3 @@ def manual_login():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-
-  
-  
