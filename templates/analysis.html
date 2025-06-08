@@ -28,9 +28,8 @@
 </div>
 
 <script>
-    const userScore = {{ stats['score'] }};
-    const maxScore = {{ stats['max_score'] }};
-
+    const userScore = {{ stats['score'] | int }};
+    const maxScore = {{ stats['max_score'] | int }};
 
     // Bar Chart
     new Chart(document.getElementById('barChart'), {
@@ -81,7 +80,6 @@
         }
     });
 </script>
-
 
 </body>
 </html>
