@@ -3,100 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Game Question</title>
+    <title>Aptitude Questions</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='/css/quiz1.css') }}">
-
     <style>
-        .navigation-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            padding: 0 20px;
+        
+    
+
+        /* ✅ Checkbox is read-only and styled */
+        input[type="checkbox"] {
+            pointer-events: none;
+            accent-color: #0288D1; /* Blue checkmark */
+            transform: scale(1.4);
         }
 
-        .nav-btn {
-            padding: 10px 20px;
-            font-size: 16px;
-            color: black;
-            background-color: #d3d3d3;
+       
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            background-color: #333;
+            color: white;
             border: none;
+            margin: 0 2px;
+            padding: 8px 12px;
             border-radius: 5px;
             cursor: pointer;
-            text-decoration: none;
+        }
+        .pagination button.active {
+            background-color: #555;
+        }
+        .pagination button:hover {
+            background-color: #777;
+        }
+        .pagination span {
+            color: white;
+            margin: 0 2px;
+            padding: 8px 12px;
         }
 
-        .nav-btn:hover {
-            background-color: #0288D1;
-            color:white;
-        }
-
-        .nav-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <!-- Question Table -->
-        <form method="POST">
-            <table class="question-table">
-                <tr>
-                    <th colspan="2">{{ question_data['title'] }}</th>
-                </tr>
-                {% for option in question_data['options'] %}
-                <tr>
-                    <td class="option">
-                        <label class="option-button">
-                            <input type="radio" name="answer" value="{{ option }}" required>
-                            <span>{{ option }}</span>
-                        </label>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
+    <table>
+        <tr>
+            <th>Status</th>
+            <th>Problem</th>
+            <th>Difficulty</th>
+        </tr>
+        {% for problem in problems %}
+        <tr>
+            <td><input type="checkbox" id="status-{{ loop.index }}" {% if problem['completed'] %} checked {% endif %}></td>
+            <td>
+                <a href="{{ url_for('question', concept=problem['slug']) }}" class="concept-link" style="color:white; text-decoration:none;">
+                    {{ problem['title'] }}
+                </a>
+            </td>
+            <td class="{{ problem['difficulty'].lower() }}">{{ problem['difficulty'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
-            <!-- ✅ Submit Button -->
-            <div class="control-buttons">
-                <button type="submit" class="lock-btn">Submit Answer</button>
-            </div>
-        </form>
-
-        {% if selected %}
-        <!-- ✅ Explanation Section -->
-        <div class="explanation-container">
-            <table class="explanation-table">
-                <tr>
-                    <th>Explanation</th>
-                </tr>
-                <tr>
-                    <td>
-                        {% if correct %}
-                            <p class="correct">Correct! ✅</p>
-                        {% else %}
-                            <p class="incorrect">Incorrect ❌</p>
-                        {% endif %}
-                        <p><strong>{{ question_data['explanation'] }}</strong></p>
-                    </td>
-                </tr>
-            </table>
-        </div>
+    <div class="pagination">
+        {% if current_page > 1 %}
+        <a href="{{ url_for('participate', page=current_page - 1) }}"><button>&lt;</button></a>
         {% endif %}
-
-        <!-- ✅ Navigation Buttons -->
-        <div class="navigation-buttons">
-            {% if prev_slug %}
-                <a href="{{ url_for('question', concept=prev_slug) }}" class="nav-btn">⬅ Previous</a>
-            {% else %}
-                <button class="nav-btn" disabled>⬅ Previous</button>
+        {% for page in range(1, total_pages + 1) %}
+            {% if page == 1 or page == 2 or page == total_pages or (page >= current_page - 1 and page <= current_page + 1) %}
+                {% if page == current_page %}
+                <button class="active">{{ page }}</button>
+                {% else %}
+                <a href="{{ url_for('participate', page=page) }}"><button>{{ page }}</button></a>
+                {% endif %}
+            {% elif page == 3 or page == current_page + 2 or page == current_page - 2 %}
+                <span>...</span>
             {% endif %}
-            
-            {% if next_slug %}
-                <a href="{{ url_for('question', concept=next_slug) }}" class="nav-btn">Next ➡</a>
-            {% else %}
-                <button class="nav-btn" disabled>Next ➡</button>
-            {% endif %}
-        </div>
+        {% endfor %}
+        {% if current_page < total_pages %}
+        <a href="{{ url_for('participate', page=current_page + 1) }}"><button>&gt;</button></a>
+        {% endif %}
     </div>
+
+    <script src="{{ url_for('static', filename='/js/quiz.js') }}"></script>
 </body>
 </html>
