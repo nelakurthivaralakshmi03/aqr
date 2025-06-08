@@ -6,6 +6,17 @@
     <title>Aptitude Questions</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='/css/quiz1.css') }}">
     <style>
+        
+    
+
+        /* ✅ Checkbox is read-only and styled */
+        input[type="checkbox"] {
+            pointer-events: none;
+            accent-color: #0288D1; /* Blue checkmark */
+            transform: scale(1.4);
+        }
+
+       
         .pagination {
             display: flex;
             justify-content: center;
@@ -31,6 +42,7 @@
             margin: 0 2px;
             padding: 8px 12px;
         }
+
     </style>
 </head>
 <body>
@@ -44,7 +56,7 @@
         <tr>
             <td><input type="checkbox" id="status-{{ loop.index }}" {% if problem['completed'] %} checked {% endif %}></td>
             <td>
-                <a href="{{ url_for('question', concept=problem['slug']) }}" class="concept-link" style=" color:white; text-decoration:none;">
+                <a href="{{ url_for('question', concept=problem['slug']) }}" class="concept-link" style="color:white; text-decoration:none;">
                     {{ problem['title'] }}
                 </a>
             </td>
