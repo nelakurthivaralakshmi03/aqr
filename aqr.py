@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # MongoDB setup
 try:
-    client = MongoClient('mongodb://localhost:27017/', serverSelectionTimeoutMS=5000)
+    client = MongoClient('mongodb+srv://vara:vara2023.@cluster-1.zdli1jk.mongodb.net/test?retryWrites=true&w=majority', serverSelectionTimeoutMS=5000)
     client.server_info()
     db = client['aptitude_db']
     collection = db['questions']
