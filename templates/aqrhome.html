@@ -31,7 +31,7 @@
           <span>{{ user_email[0].upper() }}</span>
         </button>
         <div class="dropdown-content">
-          <a href="/profile">Profile</a>
+         
           <a href="/logout">Logout</a>
         </div>
       </div>
@@ -49,12 +49,22 @@
 <header>
   <center><h1>Welcome to the Aptitude Learning Quiz</h1></center>
   <center><p>Test your skills and compete with others!</p></center>
-  <center><a href="/quiz" class="start-btn">Start Quiz</a></center>
+ <center>
+  {% if user_email %}
+    <a href="{{url_for('participate_question')}}" class="start-btn">Start Quiz</a>
+  {% else %}
+  <button type="button" class="start-btn" data-bs-toggle="modal" data-bs-target="#loginModal">
+    Start Quiz
+  </button>
+{% endif %}
+
+  
+</center>
 </header>
 
 <!-- Footer -->
 <footer>
-  <center><p>Contact: support@aptitudequiz.com</p></center>
+  <center><p>Contact: aptitudequizrace@gmail.com</p></center>
 </footer>
 
 <!-- Modal -->
