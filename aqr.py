@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # MongoDB setup
 try:
-    client = MongoClient('mongodb+srv://vara:vara2023.@cluster-1.zdli1jk.mongodb.net/test?retryWrites=true&w=majority', serverSelectionTimeoutMS=5000)
+    client = MongoClient('mongodb://localhost:27017/', serverSelectionTimeoutMS=5000)
     client.server_info()
     db = client['aptitude_db']
     collection = db['questions']
@@ -37,6 +37,10 @@ def home():
 def logout():
     session.clear()
     return redirect(url_for('home'))
+
+@app.route('/participate/question')
+def participate_question():
+    return redirect(url_for('participate'))
 
 @app.route('/analysis')
 def status():
@@ -78,10 +82,23 @@ def question(concept):
     if 'user_email' not in session:
         return redirect(url_for('home'))
 
+    # Fetch current question
     question_data = collection.find_one({'slug': concept})
     if not question_data:
         return "Question not found", 404
 
+    # Find all slugs to calculate previous/next
+    all_slugs = list(collection.find({}, {'slug': 1, '_id': 0}))
+    slug_list = [q['slug'] for q in all_slugs]
+    try:
+        index = slug_list.index(concept)
+    except ValueError:
+        return "Invalid slug", 404
+
+    prev_slug = slug_list[index - 1] if index > 0 else None
+    next_slug = slug_list[index + 1] if index < len(slug_list) - 1 else None
+
+    # POST request logic (answer submitted)
     if request.method == 'POST':
         selected_answer = request.form['answer']
         correct = selected_answer == question_data['answer']
@@ -108,40 +125,44 @@ def question(concept):
                     'completed_questions': [question_id]
                 })
 
-        return render_template('question.html', question_data=question_data, selected=selected_answer, correct=correct)
+        return render_template(
+            'question.html',
+            question_data=question_data,
+            selected=selected_answer,
+            correct=correct,
+            prev_slug=prev_slug,
+            next_slug=next_slug
+        )
 
-    return render_template('question.html', question_data=question_data)
+    # GET request logic (show question)
+    return render_template(
+        'question.html',
+        question_data=question_data,
+        prev_slug=prev_slug,
+        next_slug=next_slug
+    )
 
-@app.route('/update_status/<slug>', methods=['POST'])
-def update_status(slug):
-    is_completed = request.json.get("completed")
-    collection.update_one({"slug": slug}, {"$set": {"completed": is_completed}})
-    return jsonify({"status": "success"})
 
-@app.route('/leaderboard')
 @app.route('/leaderboard')
 def leaderboard():
     users = list(result_collection.find({}, {'_id': 0, 'email': 1, 'score': 1}))
     
     # Sort users by score descending
     users.sort(key=lambda x: x['score'], reverse=True)
-
+    
     leaderboard_data = []
     prev_score = None
     rank = 0
+    actual_position = 0
 
     for user in users:
+        actual_position += 1
         if user['score'] != prev_score:
-            rank += 1
+            rank = actual_position
             prev_score = user['score']
-        leaderboard_data.append({
-            'rank': rank,
-            'email': user['email'],
-            'score': user['score']
-        })
+        leaderboard_data.append({'rank': rank, 'email': user['email'], 'score': user['score']})
 
     return render_template('leader board.html', leaderboard=leaderboard_data)
-
 
 # Manual Signup
 @app.route('/signup', methods=['POST'])
