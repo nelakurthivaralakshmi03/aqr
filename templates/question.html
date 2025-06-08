@@ -5,6 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Game Question</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='/css/quiz1.css') }}">
+
+    <style>
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 0 20px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: black;
+            background-color: #d3d3d3;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background-color: #0288D1;
+            color:white;
+        }
+
+        .nav-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
     <div class="game-container">
@@ -52,6 +82,21 @@
             </table>
         </div>
         {% endif %}
+
+        <!-- ✅ Navigation Buttons -->
+        <div class="navigation-buttons">
+            {% if prev_slug %}
+                <a href="{{ url_for('question', concept=prev_slug) }}" class="nav-btn">⬅ Previous</a>
+            {% else %}
+                <button class="nav-btn" disabled>⬅ Previous</button>
+            {% endif %}
+            
+            {% if next_slug %}
+                <a href="{{ url_for('question', concept=next_slug) }}" class="nav-btn">Next ➡</a>
+            {% else %}
+                <button class="nav-btn" disabled>Next ➡</button>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>
